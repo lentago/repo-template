@@ -15,12 +15,12 @@ defaults. Apply fleet settings, then delete this file.
 ## 2. Apply fleet settings
 
 If the **org-level `fleet-baseline` ruleset** exists (see
-`~/repos/fleet-ops/`), branch protection is already inherited automatically —
+`dotgithub/fleet-ops/`), branch protection is already inherited automatically —
 skip the per-repo ruleset. Otherwise, and for the merge-button/topics that
 rulesets don't cover, run the fleet script from `~/repos`:
 
 ```bash
-fleet-ops/fleet-apply.sh --apply --repo <new-repo-name>
+dotgithub/fleet-ops/fleet-apply.sh --apply --repo <new-repo-name>
 ```
 
 That sets squash-only merge + auto-merge + delete-branch-on-merge and ensures
