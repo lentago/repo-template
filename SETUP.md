@@ -24,16 +24,16 @@ dotgithub/fleet-ops/fleet-apply.sh --apply --repo <new-repo-name>
 ```
 
 That sets squash-only merge + auto-merge + delete-branch-on-merge and ensures
-the `pitzilabs` + `claude` spine topics. Add this repo's signature topics by
+the `lentago` + `claude` spine topics. Add this repo's signature topics by
 hand:
 
 ```bash
-gh repo edit PitziLabs/<new-repo-name> --add-topic <signature-tag> ...
+gh repo edit lentago/<new-repo-name> --add-topic <signature-tag> ...
 ```
 
 ## 3. Add the repo to the fleet inventory
 
-Add the new repo name to the PitziLabs org list in `~/repos/CLAUDE.md`.
+Add the new repo name to the Lentago Labs org list in `~/repos/CLAUDE.md`.
 
 ## 4. Delete this file
 

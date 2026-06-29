@@ -20,10 +20,10 @@ ability.
 
 ---
 
-*Part of the [PitziLabs](https://github.com/PitziLabs) portfolio.*
+*Part of the [Lentago Labs](https://github.com/lentago) portfolio.*
 
 <!--
-  Created from PitziLabs/repo-template. Templates copy FILES, not SETTINGS —
+  Created from lentago/repo-template. Templates copy FILES, not SETTINGS —
   after creating this repo, apply fleet settings (merge-button, topics, branch
   ruleset). See SETUP.md, then delete it.
 -->
