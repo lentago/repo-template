@@ -1,7 +1,7 @@
 # ============================================================================
 # Claude Code — Automated PR Review
 # ============================================================================
-# Thin wrapper around PitziLabs/shared-workflows/claude-review.yml.
+# Thin wrapper around lentago/shared-workflows/claude-review.yml.
 # Pinned to Haiku.
 #
 # >>> CUSTOMIZE THE review_prompt BELOW FOR THIS REPO. <<<
@@ -29,7 +29,7 @@ jobs:
       pull-requests: write
       issues: write
       id-token: write
-    uses: PitziLabs/shared-workflows/.github/workflows/claude-review.yml@main
+    uses: lentago/shared-workflows/.github/workflows/claude-review.yml@main
     secrets: inherit
     with:
       review_prompt: |
