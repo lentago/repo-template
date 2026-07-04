@@ -1,5 +1,7 @@
 # [repo name]
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lentago/[repo-name])
+
 [One-paragraph description of what this repo is and who it's for.]
 
 **Authorship:** [Adjust to fit, but keep a co-authorship disclosure at the
