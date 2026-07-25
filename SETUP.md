@@ -31,11 +31,15 @@ hand:
 gh repo edit lentago/<new-repo-name> --add-topic <signature-tag> ...
 ```
 
-## 3. Add the repo to the fleet inventory
+## 3. Replace the brand banner
+
+`assets/banner.svg` is the repo-template banner copied from `lentago/.github`. Replace it with one generated for your repo: add the new repo name to `brand/fleet.json` in `lentago/.github`, run `python3 brand/generate.py --repo <name>`, and copy the resulting `brand/generated/<name>/banner.svg` into `assets/`.
+
+## 4. Add the repo to the fleet inventory
 
 Add the new repo name to the Lentago Labs org list in `~/repos/CLAUDE.md`.
 
-## 4. Delete this file
+## 5. Delete this file
 
 ```bash
 git rm SETUP.md && git commit -m "Remove template setup notes" && git push
