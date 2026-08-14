@@ -36,9 +36,11 @@ Evidence (verified against current repo):
 
 ## Alternatives
 
-**GitHub Actions `repository` creation trigger** — Fire `fleet-apply.sh` automatically when a
-new repo is created from the template. Removes the manual step. Requires a long-lived org-level
-token with admin write access and a persistent actor to run the workflow.
+**GitHub Actions `repository` creation trigger** *(retrospective — not considered at the time)* —
+Fire `fleet-apply.sh` automatically when a new repo is created from the template. Removes the
+manual step, but requires a long-lived org-level token with admin write access and a persistent
+actor to run the workflow. *Worse*: standing admin credentials to save one documented manual
+step — and the fleet's later settings-as-code Terraform path closed the same gap without them.
 
 **Cookiecutter / Copier** *(retrospective — not considered at the time)* — Both tools support
 parametrized scaffolding (named slots, interactive prompts, conditional sections) and can run

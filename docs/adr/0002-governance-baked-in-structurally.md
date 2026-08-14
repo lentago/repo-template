@@ -43,14 +43,18 @@ Evidence (verified against current repo):
 
 ## Alternatives
 
-**CONTRIBUTING.md convention** — A conventions document listing the authorship disclosure
-requirement and review configuration steps. Easy to miss; provides no structural enforcement.
+**CONTRIBUTING.md convention** *(retrospective — not considered at the time)* — A conventions
+document listing the authorship disclosure requirement and review configuration steps. *Worse*:
+easy to miss; provides no structural enforcement — the exact failure mode shipping the structure
+avoids.
 
-**CI lint check** — A workflow that asserts the authorship block is present and detects the
-boilerplate `review_prompt`. Stronger than a comment; adds CI complexity and requires maintaining
-the detection heuristics as the boilerplate text changes.
+**CI lint check** *(retrospective — not considered at the time)* — A workflow that asserts the
+authorship block is present and detects the boilerplate `review_prompt`. *Lateral*: stronger
+than a comment, but adds CI complexity and requires maintaining detection heuristics as the
+boilerplate text changes. (`fleet-apply.sh` later grew a boilerplate-prompt scan, covering part
+of this from the settings side.)
 
-**Leave automated review enabled by default** *(retrospective — not considered at the time)* —
+**Leave automated review enabled by default** *(the recorded prior state — replaced by PR #2)* —
 Keeps the automated review running on every PR so issues are surfaced without manual invocation.
 The specific problem: if the `review_prompt` is still the placeholder when a derived repo opens
 its first PR, review runs against the wrong rubric. Enabling review-by-default without solving

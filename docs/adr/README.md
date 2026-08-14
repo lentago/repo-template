@@ -1,9 +1,15 @@
 # Architecture decision records
 
-The decisions below were reconstructed on 2026-08-13 from the repository's commit history, merged
-pull requests, and CLAUDE.md contents. Dates in each record reflect the original decision date, not
-the reconstruction date. Evidence anchors (PR numbers, file lines) have been verified against the
-current repo state; anything that could not be confirmed is marked uncertain.
+The decisions below were reconstructed on 2026-08-13 from **this template repository's own**
+commit history, merged pull requests, and CLAUDE.md contents. Dates in each record reflect the
+original decision date, not the reconstruction date. Evidence anchors (PR numbers, file lines)
+have been verified against the current repo state; anything that could not be confirmed is marked
+uncertain.
+
+> **Scaffolding note — for repos created from this template:** ADRs 0001/0002 and their index
+> rows document the template repo itself, not your new repo. On setup (see `SETUP.md`), delete
+> those two records and their rows, keep this file as your repo's ADR log, and use the format
+> guide below for your own decisions.
 
 ## Index
 
