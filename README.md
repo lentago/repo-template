@@ -65,6 +65,7 @@ Click "Use this template" on this repo to create a new lentago repo. The templat
 
 - [Key file / directory] — [purpose]
 - [Key file / directory] — [purpose]
+- [Architecture decisions](docs/adr/) — ADR log; two seed records reconstructed from repo history
 
 ## [How it works / Usage]
 
