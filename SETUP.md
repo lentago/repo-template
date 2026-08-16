@@ -12,6 +12,12 @@ defaults. Apply fleet settings, then delete this file.
 - `.github/workflows/claude-code-review.yml` — **replace the placeholder
   `review_prompt`** with one written for THIS repo. Do not ship the boilerplate.
 
+The skeleton also ships these files that are ready to use as-is:
+
+- `.github/dependabot.yml` — weekly Dependabot updates for GitHub Actions
+  (github-actions ecosystem only; add npm/pip blocks if the repo gains manifests).
+  Third-party action pins in workflows will be auto-PRed when new versions drop.
+
 ## 2. Apply fleet settings
 
 If the **org-level `fleet-baseline` ruleset** exists (see
