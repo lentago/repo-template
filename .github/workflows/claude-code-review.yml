@@ -29,7 +29,7 @@ jobs:
       pull-requests: write
       issues: write
       id-token: write
-    uses: lentago/shared-workflows/.github/workflows/claude-review.yml@main
+    uses: lentago/shared-workflows/.github/workflows/claude-review.yml@v1.2.1 # v1.2.1
     secrets: inherit
     with:
       review_prompt: |
