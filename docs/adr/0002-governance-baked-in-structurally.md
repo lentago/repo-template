@@ -1,6 +1,6 @@
 # ADR-0002: Template ships governance as structure, not convention
 
-**Status:** Accepted (2026-06-14, reinforced 2026-06-25; reconstructed 2026-08-13)
+**Status:** Accepted (2026-06-14, reinforced 2026-06-25; reconstructed 2026-08-13; amended 2026-10-06, see end)
 
 ## Context
 
@@ -75,3 +75,19 @@ enforcement of any individual step.
 - Automated review is off by default; re-enabling is a deliberate PR, not an accidental trigger.
 - The auditable off-switch pattern (a dated disable comment + `workflow_dispatch` trigger) is
   itself now a fleet pattern, documented in this repo's README as a live example.
+
+## Amendment (2026-10-06): the review workflow is retired
+
+`claude-code-review.yml` was deleted from the template (and fleet-wide). It had
+been dispatch-only since 2026-06-25, and CodeRabbit was installed org-wide on
+2026-10-03 as the advisory AI reviewer, configured once in `lentago/coderabbit`
+and never a merge gate. The evidence lines above describe the file as it stood
+at its [last version](https://github.com/lentago/repo-template/blob/dc9c2ae82fef3525e9726a46f09f3ffd537fb64f/.github/workflows/claude-code-review.yml).
+
+Guarantees 2 and 3 now hold by absence rather than by an off-switch: the
+template ships **no** workflow that runs AI review on pull requests, so there is
+no default to turn off and no per-repo `review_prompt` that could ship as
+boilerplate. A derived repo that needs a different review rubric adds a
+`.coderabbit.yaml` in a reviewable PR. Guarantee 1 (authorship disclosure) is
+unchanged. The SETUP.md "replace the `review_prompt`" step was removed with the
+file.

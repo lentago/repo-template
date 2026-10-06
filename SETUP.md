@@ -25,8 +25,6 @@ lentago/<repo> --description "..."`) before your first PR.
 - `README.md` — name, description, keep the Claude co-authorship disclosure at
   the top.
 - `CLAUDE.md` — persona, what-this-repo-is, conventions.
-- `.github/workflows/claude-code-review.yml` — **replace the placeholder
-  `review_prompt`** with one written for THIS repo. Do not ship the boilerplate.
 
 The skeleton also ships these files that are ready to use as-is:
 
