@@ -31,7 +31,7 @@ ability.
 
 - What does creating a new repo from repo-template actually copy, and what do I still have to configure by hand afterward?
 - Why is the docs-check workflow deliberately not path-filtered, and what would break if I added a paths filter to it?
-- Why was the claude-code-review.yml automated PR review disabled, and how would I re-enable it?
+- Why does the template ship no automated AI review workflow, and where does PR review come from instead?
 
 ## 🧭 What this repo demonstrates
 
@@ -43,7 +43,7 @@ The paved road: every Lentago Labs repo starts here and inherits these patterns 
 | Deliberately non-path-filtered required check | `docs-check.yml` header comment explains: a path-filtered required check that never fires is held "Expected" forever, deadlocking every non-matching PR — the hard lesson from [lentago/.github#57](https://github.com/lentago/.github/issues/57) |
 | Branch ruleset: squash-only, PR required, no force-push/deletion | Per-repo ruleset `lentago/repo-template` — textbook PR-gated change control where the merged PR is the change record; settings-as-code branch protection operators can point to as a live example |
 | `@claude` interactive responder wired via reusable workflow | [`.github/workflows/claude.yml`](.github/workflows/claude.yml) wires an AI agent into the PR/issue lifecycle as a callable teammate, not a one-off script |
-| Automated review deliberately disabled with an auditable off-switch | [`.github/workflows/claude-code-review.yml`](.github/workflows/claude-code-review.yml) switched to `workflow_dispatch` only on 2026-06-25 — toggling automation off is itself a reviewable, git-tracked decision ([PR #2](https://github.com/lentago/repo-template/pull/2)) |
+| Automated review as an auditable, git-tracked decision | `claude-code-review.yml` was switched to `workflow_dispatch` on 2026-06-25 ([PR #2](https://github.com/lentago/repo-template/pull/2)) and retired on 2026-10-06 once CodeRabbit became the org-wide advisory reviewer ([last version](https://github.com/lentago/repo-template/blob/dc9c2ae82fef3525e9726a46f09f3ffd537fb64f/.github/workflows/claude-code-review.yml)). Turning automation off, and later removing it, were each reviewable decisions (ADR-0002, amended) |
 | Settings-as-code is external to the template | [`SETUP.md`](SETUP.md) step 2: branch protection, merge-button, and topics are applied by `dotgithub/fleet-ops/fleet-apply.sh` after creation — a GitHub template copies files, not settings |
 | Generated brand header with a do-not-hand-edit contract | The HTML comment above the banner: regenerate from `lentago/.github → brand/generate.py`, never hand-edit — single source of truth upstream, consumers regenerate rather than drift |
 | Mandatory co-authorship disclosure baked into the template | The `**Authorship:**` block above ensures every derived repo opens with an AI co-authorship disclosure — structural governance, not an optional per-repo choice |
@@ -56,7 +56,7 @@ shop. Pick one:
 
 **Spin up a new repo compliant on day one (the paved road)**
 
-Click "Use this template" on this repo to create a new lentago repo. The template copies `README.md`, `CLAUDE.md`, `SETUP.md`, the CI wrappers, `LICENSE`, and `assets/` verbatim — but not settings. Fill in the README/CLAUDE.md placeholders and replace the `review_prompt` placeholder in [`claude-code-review.yml`](.github/workflows/claude-code-review.yml) with a description of your repo's content. Then run `dotgithub/fleet-ops/fleet-apply.sh --apply --repo <new-repo-name>` to inherit squash-only merge, branch protection, and org topics. Replace `assets/banner.svg` via `lentago/.github`'s `brand/generate.py`, add the repo to `~/repos/CLAUDE.md`'s fleet inventory, delete `SETUP.md`, and open a PR with those changes. No apply-on-merge automation runs against the template itself — compliance is enforced by the `docs-check` required status check plus the org's fleet-baseline ruleset. Org membership is required to push branches; the fleet-apply script requires access to `dotgithub/fleet-ops/`.
+Click "Use this template" on this repo to create a new lentago repo. The template copies `README.md`, `CLAUDE.md`, `SETUP.md`, the CI wrappers, `LICENSE`, and `assets/` verbatim — but not settings. Fill in the README/CLAUDE.md placeholders. Then run `dotgithub/fleet-ops/fleet-apply.sh --apply --repo <new-repo-name>` to inherit squash-only merge, branch protection, and org topics. Replace `assets/banner.svg` via `lentago/.github`'s `brand/generate.py`, add the repo to `~/repos/CLAUDE.md`'s fleet inventory, delete `SETUP.md`, and open a PR with those changes. No apply-on-merge automation runs against the template itself — compliance is enforced by the `docs-check` required status check plus the org's fleet-baseline ruleset. Org membership is required to push branches; the fleet-apply script requires access to `dotgithub/fleet-ops/`.
 
 **Proof this works:**
 - [PR #9 — Adopt the shared docs-check workflow](https://github.com/lentago/repo-template/pull/9) — wires the template into the required docs-check check pattern every new repo inherits
