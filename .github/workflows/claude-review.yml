@@ -1,0 +1,100 @@
+# ============================================================================
+# Claude Code — Automated PR Review (advisory)
+# ============================================================================
+# Thin wrapper around lentago/shared-workflows/claude-review.yml, per
+# lentago/.github ADR-0013. This is the fleet's reference copy: other repos
+# copy this file and replace only the review_prompt.
+#
+# - Runs when a PR is opened or marked ready for review, and again when it is
+#   labelled `re-review` (Haiku) or `review:sonnet` (Sonnet). It does NOT run on
+#   every push: it shares the fleet's Claude subscription with the bullpen.
+# - Advisory, never a required status check (shared-workflows ADR-0003). The
+#   gate is the arming rule: don't arm until a review has posted and every
+#   finding is triaged on the PR (shared-workflows CLAUDE.md, Auto-merge
+#   arming). A "could not complete" soft-fail comment is not a review —
+#   label `re-review`.
+# - After a labelled run, `clear-label` removes the label so adding it again
+#   triggers again.
+# - A PR that adds or changes THIS file is not reviewed by it: the Claude Code
+#   action skips (green, nothing posted) unless the workflow is identical to
+#   the default branch's copy. Review such PRs locally and post the result as
+#   "Review (Haiku, local)" (ADR-0013 Decision 2).
+# - Dependabot PRs are skipped: Dependabot runs don't receive Actions secrets,
+#   so the required token would fail the call. Review a bump locally if it
+#   warrants one.
+# - Drafts are skipped (by the reusable workflow) and keep their trigger label
+#   until they are ready.
+# ============================================================================
+
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, labeled]
+
+jobs:
+  review:
+    if: >-
+      github.actor != 'dependabot[bot]' &&
+      github.event.pull_request.draft == false &&
+      (github.event.action != 'labeled' ||
+       github.event.label.name == 're-review' ||
+       github.event.label.name == 'review:sonnet')
+    # One review at a time per PR: a re-label during a running review queues
+    # behind it instead of posting a duplicate.
+    concurrency:
+      group: claude-review-${{ github.event.pull_request.number }}
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+    uses: lentago/shared-workflows/.github/workflows/claude-review.yml@v1.4.0
+    secrets: inherit
+    with:
+      model: ${{ github.event.label.name == 'review:sonnet' && 'sonnet' || 'haiku' }}
+      review_prompt: |
+        This repository is lentago/repo-template, the GitHub template every new
+        Lentago Labs repo is generated from. Its files (README.md, CLAUDE.md,
+        LICENSE, .github/ workflows and community-health stubs) are copied
+        verbatim into each new repo, so a defect here is a defect in every repo
+        born afterwards. Focus your review on:
+
+        - **Template safety**: nothing repo-specific, secret, or tied to one
+          product should land here. Placeholders must stay obviously
+          placeholders (bracketed, e.g. `[repo name]`) so a new repo can't ship
+          them by accident.
+        - **Workflow correctness**: callers of lentago/shared-workflows must pin
+          an immutable semver tag (shared-workflows ADR-0005), request only the
+          permissions they need, and keep untrusted event data out of `run:`
+          lines (pass it through `env:`).
+        - **Fleet conventions**: README structure, the brand header and footer,
+          and the CLAUDE.md skeleton must match the canon in lentago/.github
+          (`docs/voice.md`, `brand/`). Flag a drift that every new repo would
+          inherit.
+        - **Links**: every relative link must resolve in a freshly generated
+          repo, not just here, because the fleet runs a required link checker.
+
+  clear-label:
+    needs: review
+    if: >-
+      always() && github.event.action == 'labeled' &&
+      github.event.pull_request.draft == false &&
+      (github.event.label.name == 're-review' || github.event.label.name == 'review:sonnet')
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Remove the trigger label so it can be added again
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          LABEL: ${{ github.event.label.name }}
+        # REST, not `gh pr edit`: the GraphQL path can trip on PR project
+        # fields with GITHUB_TOKEN, and a label left behind would make the
+        # next re-add a no-op (no `labeled` event).
+        run: |
+          enc=$(jq -rn --arg l "$LABEL" '$l|@uri')
+          gh api --method DELETE "repos/$REPO/issues/$PR/labels/$enc" >/dev/null
