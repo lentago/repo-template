@@ -15,6 +15,10 @@
 #   label `re-review`.
 # - After a labelled run, `clear-label` removes the label so adding it again
 #   triggers again.
+# - A PR that adds or changes THIS file is not reviewed by it: the Claude Code
+#   action skips (green, nothing posted) unless the workflow is identical to
+#   the default branch's copy. Review such PRs locally and post the result as
+#   "Review (Haiku, local)" (ADR-0013 Decision 4).
 # ============================================================================
 
 name: Claude Code Review
