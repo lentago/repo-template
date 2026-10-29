@@ -69,3 +69,5 @@ Click "Use this template" on this repo to create a new lentago repo. The templat
   after creating this repo, apply fleet settings (merge-button, topics, branch
   ruleset). See SETUP.md, then delete it.
 -->
+
+<!-- reviewer pilot test 2, 2026-10-29: this PR is closed without merging -->
