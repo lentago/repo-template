@@ -18,7 +18,12 @@
 # - A PR that adds or changes THIS file is not reviewed by it: the Claude Code
 #   action skips (green, nothing posted) unless the workflow is identical to
 #   the default branch's copy. Review such PRs locally and post the result as
-#   "Review (Haiku, local)" (ADR-0013 Decision 4).
+#   "Review (Haiku, local)" (ADR-0013 Decision 2).
+# - Dependabot PRs are skipped: Dependabot runs don't receive Actions secrets,
+#   so the required token would fail the call. Review a bump locally if it
+#   warrants one.
+# - Drafts are skipped (by the reusable workflow) and keep their trigger label
+#   until they are ready.
 # ============================================================================
 
 name: Claude Code Review
@@ -30,9 +35,16 @@ on:
 jobs:
   review:
     if: >-
-      github.event.action != 'labeled' ||
-      github.event.label.name == 're-review' ||
-      github.event.label.name == 'review:sonnet'
+      github.actor != 'dependabot[bot]' &&
+      github.event.pull_request.draft == false &&
+      (github.event.action != 'labeled' ||
+       github.event.label.name == 're-review' ||
+       github.event.label.name == 'review:sonnet')
+    # One review at a time per PR: a re-label during a running review queues
+    # behind it instead of posting a duplicate.
+    concurrency:
+      group: claude-review-${{ github.event.pull_request.number }}
+      cancel-in-progress: false
     permissions:
       contents: read
       pull-requests: write
@@ -68,6 +80,7 @@ jobs:
     needs: review
     if: >-
       always() && github.event.action == 'labeled' &&
+      github.event.pull_request.draft == false &&
       (github.event.label.name == 're-review' || github.event.label.name == 'review:sonnet')
     runs-on: ubuntu-latest
     permissions:
@@ -79,4 +92,9 @@ jobs:
           REPO: ${{ github.repository }}
           PR: ${{ github.event.pull_request.number }}
           LABEL: ${{ github.event.label.name }}
-        run: gh pr edit "$PR" --repo "$REPO" --remove-label "$LABEL"
+        # REST, not `gh pr edit`: the GraphQL path can trip on PR project
+        # fields with GITHUB_TOKEN, and a label left behind would make the
+        # next re-add a no-op (no `labeled` event).
+        run: |
+          enc=$(jq -rn --arg l "$LABEL" '$l|@uri')
+          gh api --method DELETE "repos/$REPO/issues/$PR/labels/$enc" >/dev/null
