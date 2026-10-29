@@ -16,9 +16,10 @@
 # - After a labelled run, `clear-label` removes the label so adding it again
 #   triggers again.
 # - A PR that adds or changes THIS file is not reviewed by it: the Claude Code
-#   action skips (green, nothing posted) unless the workflow is identical to
-#   the default branch's copy. Review such PRs locally and post the result as
-#   "Review (Haiku, local)" (ADR-0013 Decision 2).
+#   action skips unless the workflow is identical to the default branch's copy,
+#   and the reusable workflow (v1.5.0+) posts a "not a review" notice instead.
+#   Review such PRs locally and post the result as "Review (Haiku, local)"
+#   (ADR-0013 Decision 2).
 # - Dependabot PRs are skipped: Dependabot runs don't receive Actions secrets,
 #   so the required token would fail the call. Review a bump locally if it
 #   warrants one.
